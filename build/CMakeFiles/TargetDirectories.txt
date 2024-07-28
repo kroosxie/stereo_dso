@@ -1,0 +1,4 @@
+/home/kroos/stereo_dso/build/CMakeFiles/rebuild_cache.dir
+/home/kroos/stereo_dso/build/CMakeFiles/edit_cache.dir
+/home/kroos/stereo_dso/build/CMakeFiles/dso.dir
+/home/kroos/stereo_dso/build/CMakeFiles/dso_dataset.dir
