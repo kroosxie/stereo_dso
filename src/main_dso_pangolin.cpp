@@ -586,6 +586,15 @@ int main( int argc, char** argv )
             tmlog.close();
         }
 
+		 // Added by xjc
+        if (!isPCLfileClose)
+        {            
+            ((IOWrap::SampleOutputWrapper*)fullSystem->outputWrapper[1])->pclFile.flush();
+            ((IOWrap::SampleOutputWrapper*)fullSystem->outputWrapper[1])->pclFile.close();
+            isPCLfileClose = true;
+            printf("pcl tmp file is auto closed.\n");
+        }
+
     });
 
 

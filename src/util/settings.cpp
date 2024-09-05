@@ -98,7 +98,7 @@ float setting_margWeightFac = 0.5*0.5;          // factor on hessian when margin
 
 
 /* when to re-track a frame */
-float setting_reTrackThreshold = 1.5; //  ¸Äµ½1 Ã»ÓÐµÃµ½¸ÄÉÆ original is 1.5 (larger = re-track more often)
+float setting_reTrackThreshold = 1.5; //  ï¿½Äµï¿½1 Ã»ï¿½ÐµÃµï¿½ï¿½ï¿½ï¿½ï¿½ original is 1.5 (larger = re-track more often)
 
 
 
@@ -211,6 +211,13 @@ bool setting_debugout_runquiet = true; //original is false
 
 int sparsityFactor = 5;	// not actually a setting, only some legacy stuff for coarse initializer.
 
+// Added By xjc.
+int numPCL = 0;
+bool isSavePCL = true;
+bool isWritePCL = false;
+bool isPCLfileClose = false;
+std::string strTmpFileName = "pcl_data_tmp.pcd";
+std::string strSaveFileName = "pcl_data.pcd";
 
 void handleKey(char k)
 {
