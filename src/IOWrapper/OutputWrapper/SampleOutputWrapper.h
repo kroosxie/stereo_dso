@@ -132,10 +132,25 @@ public:
                 {
                     if (f->shell->poseValid)
                     {
+                        // CameraToWorld Matrix (坐标系变换矩阵)
                         auto const& m = f->shell->camToWorld.matrix3x4();
 
                         // use only marginalized points.
                         auto const& points = f->pointHessiansMarginalized;
+
+                        // 定义旋转角度（90度转换为弧度）
+                        double angleDegrees = 73.0;
+                        double angleRadians = angleDegrees * M_PI / 180.0;
+
+                        // 创建绕x轴旋转的AngleAxis对象
+                        Eigen::AngleAxisd rotationAngleAxis(angleRadians, Eigen::Vector3d::UnitX());
+
+                        // 使用AngleAxis对象构造旋转矩阵
+                        Eigen::Matrix3d rotationMatrix = rotationAngleAxis.toRotationMatrix();
+
+                        // 打印旋转矩阵
+                        std::cout << "绕x轴旋转90度的旋转矩阵:" << std::endl;
+                        std::cout << rotationMatrix << std::endl;
 
                         for (auto const* p : points)
                         {
@@ -145,7 +160,7 @@ public:
                             auto const z = depth * (1 + 2 * fxi);
 
                             Eigen::Vector4d camPoint(x, y, z, 1.f);
-                            Eigen::Vector3d worldPoint = m * camPoint;
+                            Eigen::Vector3d worldPoint = rotationMatrix * m * camPoint;
 
                             if (isSavePCL && pclFile.is_open())
                             {
