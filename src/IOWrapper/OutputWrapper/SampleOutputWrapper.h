@@ -138,18 +138,21 @@ public:
                         // use only marginalized points.
                         auto const& points = f->pointHessiansMarginalized;
 
-                        // 定义旋转角度（90度转换为弧度）
-                        double angleDegrees = 73.0;
-                        double angleRadians = angleDegrees * M_PI / 180.0;
+                        // 定义旋转角度（角度转换为弧度）
+                        double angleDegrees_x = 73.0;
+                        double angleRadians_x = angleDegrees_x * M_PI / 180.0;
+                        double angleDegrees_y = -4;
+                        double angleRadians_y = angleDegrees_y * M_PI / 180.0;
 
-                        // 创建绕x轴旋转的AngleAxis对象
-                        Eigen::AngleAxisd rotationAngleAxis(angleRadians, Eigen::Vector3d::UnitX());
+                        // 创建的AngleAxis对象
+                        Eigen::AngleAxisd rotationAngleAxis_x(angleRadians_x, Eigen::Vector3d::UnitX()); //绕x轴旋转
+                        Eigen::AngleAxisd rotationAngleAxis_y(angleRadians_y, Eigen::Vector3d::UnitY()); //绕y轴旋转
 
                         // 使用AngleAxis对象构造旋转矩阵
-                        Eigen::Matrix3d rotationMatrix = rotationAngleAxis.toRotationMatrix();
+                        Eigen::Matrix3d rotationMatrix = rotationAngleAxis_y.toRotationMatrix() * rotationAngleAxis_x.toRotationMatrix();
 
                         // 打印旋转矩阵
-                        std::cout << "绕x轴旋转90度的旋转矩阵:" << std::endl;
+                        std::cout << "旋转矩阵:" << std::endl;
                         std::cout << rotationMatrix << std::endl;
 
                         for (auto const* p : points)
