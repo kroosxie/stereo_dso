@@ -556,7 +556,7 @@ int main( int argc, char** argv )
         gettimeofday(&tv_end, NULL);
 
 
-        fullSystem->printResult("/mnt/hgfs/ShareFolder/Beidou_farm/result.txt");
+        fullSystem->printResult("/home/kroos/stereo_dso/build/pose.txt");
 
 
         int numFramesProcessed = abs(idsToPlay[0]-idsToPlay.back());
