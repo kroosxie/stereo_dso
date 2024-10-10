@@ -49,6 +49,7 @@ class SampleOutputWrapper : public Output3DWrapper
 public:
         inline SampleOutputWrapper()
         {
+            // added by xjc
             numPCL = 0;
             isSavePCL = true;
             isPCLfileClose = false;            
@@ -60,6 +61,7 @@ public:
 
         virtual ~SampleOutputWrapper()
         {
+            // added by xjc
             if (pclFile.is_open())
             {
                 pclFile.close();
@@ -141,15 +143,17 @@ public:
                         // 定义旋转角度（角度转换为弧度）
                         double angleDegrees_x = 73.0;
                         double angleRadians_x = angleDegrees_x * M_PI / 180.0;
-                        double angleDegrees_y = -4;
+                        double angleDegrees_y = -3;
                         double angleRadians_y = angleDegrees_y * M_PI / 180.0;
 
                         // 创建的AngleAxis对象
-                        Eigen::AngleAxisd rotationAngleAxis_x(angleRadians_x, Eigen::Vector3d::UnitX()); //绕x轴旋转
-                        Eigen::AngleAxisd rotationAngleAxis_y(angleRadians_y, Eigen::Vector3d::UnitY()); //绕y轴旋转
+                        Eigen::AngleAxisd rotationAngleAxis_x(angleRadians_x, Eigen::Vector3d::UnitX()); // 绕x轴旋转
+                        Eigen::AngleAxisd rotationAngleAxis_y(angleRadians_y, Eigen::Vector3d::UnitY()); // 绕y轴旋转
+                        Eigen::AngleAxisd rotationAngleAxis_x_invert(M_PI, Eigen::Vector3d::UnitX()); // 绕x轴翻转
+
 
                         // 使用AngleAxis对象构造旋转矩阵
-                        Eigen::Matrix3d rotationMatrix = rotationAngleAxis_y.toRotationMatrix() * rotationAngleAxis_x.toRotationMatrix();
+                        Eigen::Matrix3d rotationMatrix = rotationAngleAxis_x_invert.toRotationMatrix() * rotationAngleAxis_y.toRotationMatrix() * rotationAngleAxis_x.toRotationMatrix();
 
                         // 打印旋转矩阵
                         std::cout << "旋转矩阵:" << std::endl;
