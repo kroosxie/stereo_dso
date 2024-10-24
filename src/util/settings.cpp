@@ -218,6 +218,7 @@ bool isWritePCL = false;
 bool isPCLfileClose = false;
 std::string strTmpFileName = "pcl_data_tmp.pcd";
 std::string strSaveFileName = "pcl_data.pcd";
+std::string strSaveTmpFileName = "pcl_data_tmp4view.pcd";
 
 void handleKey(char k)
 {

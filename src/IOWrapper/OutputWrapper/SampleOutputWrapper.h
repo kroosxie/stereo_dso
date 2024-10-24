@@ -54,7 +54,7 @@ public:
             isSavePCL = true;
             isPCLfileClose = false;            
 
-            pclFile.open(strTmpFileName);
+            pclFile.open(strTmpFileName, std::ios::out | std::ios::app);
 
             printf("OUT: Created SampleOutputWrapper\n");
         }
@@ -159,6 +159,8 @@ public:
                         std::cout << "旋转矩阵:" << std::endl;
                         std::cout << rotationMatrix << std::endl;
 
+                        pclFile.open(strTmpFileName, std::ios::out | std::ios::app);
+                        
                         for (auto const* p : points)
                         {
                             float depth = 1.0f / p->idepth;
@@ -173,14 +175,13 @@ public:
                             {
                                 isWritePCL = true;
 
-                                pclFile << worldPoint[0] << " " << worldPoint[1] << " " << worldPoint[2] << "\n";
+                                pclFile << worldPoint[0] << " " << worldPoint[1] << " " << worldPoint[2] + 2.5 << "\n";  // 沿z轴方向上下平移
 
                                 printf("[%d] Point Cloud Coordinate> X: %.2f, Y: %.2f, Z: %.2f\n",
                                          numPCL,
                                          worldPoint[0],
                                          worldPoint[1],
-                                         worldPoint[2]);
-
+                                         worldPoint[2] + 2.5);                             
                                 numPCL++;
                                 isWritePCL = false;
                             }
@@ -198,11 +199,44 @@ public:
                             }
 
 
-                         }
+                        }
+
+                        while(1)
+                        {
+                            // std::ofstream saveTmpFile(strSaveFileName);
+                            pclFile.close();
+                            std::ofstream saveTmpFile(strSaveTmpFileName);
+                            saveTmpFile << std::string("# .PCD v.6 - Point Cloud Data file format\n");
+                            saveTmpFile << std::string("FIELDS x y z\n");
+                            saveTmpFile << std::string("SIZE 4 4 4\n");
+                            saveTmpFile << std::string("TYPE F F F\n");
+                            saveTmpFile << std::string("COUNT 1 1 1\n");
+                            saveTmpFile << std::string("WIDTH ") << numPCL << std::string("\n");
+                            saveTmpFile << std::string("HEIGHT 1\n");
+                            saveTmpFile << std::string("#VIEWPOINT 0 0 0 1 0 0 0\n");
+                            saveTmpFile << std::string("POINTS ") << numPCL << std::string("\n");
+                            saveTmpFile << std::string("DATA ascii\n");
+
+                            std::ifstream pclReadFile(strTmpFileName);
+
+                            while (!pclReadFile.eof())
+                            {                        
+                                saveTmpFile.put(pclReadFile.get());                        
+                            }
+
+                            saveTmpFile.close();
+                            pclReadFile.close();
+                            // std::ofstream pclFile(strTmpFileName, std::ios::out | std::ios::app);
+
+                            printf(" Tmp PCL File is saved.\n");
+
+                            break;
+
+                        }
+
                     }
                 }
             }
-
 
         }
 

@@ -52,7 +52,7 @@ struct GraphConnection
 };
 
 
-class PangolinDSOViewer : public Output3DWrapper
+class PangolinDSOViewer : public Output3DWrapper     // : 继承
 {
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
