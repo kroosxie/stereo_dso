@@ -54,7 +54,9 @@ public:
             isSavePCL = true;
             isPCLfileClose = false;            
 
-            pclFile.open(strTmpFileName, std::ios::out | std::ios::app);
+            // refresh pclFile first
+            pclFile.open(strTmpFileName); 
+            pclFile.close();         
 
             printf("OUT: Created SampleOutputWrapper\n");
         }
