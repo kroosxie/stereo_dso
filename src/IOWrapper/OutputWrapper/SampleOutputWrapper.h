@@ -142,6 +142,7 @@ public:
                         // use only marginalized points.
                         auto const& points = f->pointHessiansMarginalized;
 
+                        /*
                         // 定义旋转角度（角度转换为弧度）
                         double angleDegrees_x = 73.0;
                         double angleRadians_x = angleDegrees_x * M_PI / 180.0;
@@ -160,6 +161,7 @@ public:
                         // 打印旋转矩阵
                         std::cout << "旋转矩阵:" << std::endl;
                         std::cout << rotationMatrix << std::endl;
+                        */
 
                         pclFile.open(strTmpFileName, std::ios::out | std::ios::app);
                         
@@ -168,22 +170,26 @@ public:
                             float depth = 1.0f / p->idepth;
                             auto const x = (p->u * fxi + cxi) * depth;
                             auto const y = (p->v * fyi + cyi) * depth;
-                            auto const z = depth * (1 + 2 * fxi);
+                            auto const z = depth;
+                            // auto const z = depth * (1 + 2 * fxi * (rand()/(float)RAND_MAX-0.5f));  //KeyFrameDisplay.cpp使用的计算方式
+
 
                             Eigen::Vector4d camPoint(x, y, z, 1.f);
-                            Eigen::Vector3d worldPoint = rotationMatrix * m * camPoint;
+                            // Eigen::Vector3d worldPoint = rotationMatrix * m * camPoint;
+                            Eigen::Vector3d worldPoint = m * camPoint;
 
                             if (isSavePCL && pclFile.is_open())
                             {
                                 isWritePCL = true;
 
-                                pclFile << worldPoint[0] << " " << worldPoint[1] << " " << worldPoint[2] + 2.5 << "\n";  // 沿z轴方向上下平移
+                                // pclFile << worldPoint[0] << " " << worldPoint[1] << " " << worldPoint[2] << "\n";
+                                pclFile << worldPoint[0] << " " << worldPoint[2] << " " << -worldPoint[1] << "\n";  // 手动调整x,y,z轴顺序
 
                                 printf("[%d] Point Cloud Coordinate> X: %.2f, Y: %.2f, Z: %.2f\n",
                                          numPCL,
                                          worldPoint[0],
                                          worldPoint[1],
-                                         worldPoint[2] + 2.5);                             
+                                         worldPoint[2]);                             
                                 numPCL++;
                                 isWritePCL = false;
                             }
