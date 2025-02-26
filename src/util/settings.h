@@ -210,6 +210,7 @@ extern bool isPCLfileClose;
 extern int numPCL;
 extern std::string strTmpFileName;
 extern std::string strSaveFileName;
+extern std::string strRealtimeFileName;
 extern std::string strSaveTmpFileName;
 extern bool isWritePCL;
 

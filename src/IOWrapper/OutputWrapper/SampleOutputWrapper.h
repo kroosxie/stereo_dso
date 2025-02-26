@@ -248,6 +248,99 @@ public:
 
         }
 
+        // added by xjc 2024.10.10 & 2025.2.18
+       virtual void publishLiveKeyframe( FrameHessian* frame, bool final, CalibHessian* HCalib) override
+        {
+            float fx, fy, cx, cy;
+            float fxi, fyi, cxi, cyi;
+            //float colorIntensity = 1.0f;
+            fx = HCalib->fxl();
+            fy = HCalib->fyl();
+            cx = HCalib->cxl();
+            cy = HCalib->cyl();
+            fxi = 1 / fx;
+            fyi = 1 / fy;
+            cxi = -cx / fx;
+            cyi = -cy / fy;
+
+            if (final)
+            {
+                FrameHessian* f = frame;
+            
+                if (f->shell->poseValid)
+                {
+                    // CameraToWorld Matrix (坐标系变换矩阵)
+                    auto const& m = f->shell->camToWorld.matrix3x4();
+
+                    // use only marginalized points.
+                    auto const& points = f->pointHessiansMarginalized;
+                    // auto const& points = f->pointHessiansMarginalized;
+                    auto const numPCL_Realtime = points.size();
+                    std::cout << "The size of points is: " << numPCL_Realtime << std::endl;  // result : 0 ? why ?
+
+                    std::cout << "begin real-time pclfile" << std::endl;
+
+                    // add by xjc 2024.10.10
+                    std::ofstream pclFile_realtime(strRealtimeFileName, std::ofstream::trunc);  // 每次写入时都清空文件内容
+                    pclFile_realtime << std::string("# .PCD v.6 - Point Cloud Data file format\n");
+                    pclFile_realtime << std::string("FIELDS x y z\n");
+                    pclFile_realtime << std::string("SIZE 4 4 4\n");
+                    pclFile_realtime << std::string("TYPE F F F\n");
+                    pclFile_realtime << std::string("COUNT 1 1 1\n");
+                    pclFile_realtime << std::string("WIDTH ") << numPCL_Realtime << std::string("\n");  // Error: points.size = 0
+                    pclFile_realtime << std::string("HEIGHT 1\n");
+                    pclFile_realtime << std::string("#VIEWPOINT 0 0 0 1 0 0 0\n");
+                    pclFile_realtime << std::string("POINTS ") << numPCL_Realtime << std::string("\n");  // Error: points.size = 0
+                    pclFile_realtime << std::string("DATA ascii\n");
+    
+                    for (auto const* p : points)  // 没进去
+                    {
+                        float depth = 1.0f / p->idepth;
+                        auto const x = (p->u * fxi + cxi) * depth;
+                        auto const y = (p->v * fyi + cyi) * depth;
+                        auto const z = depth;
+
+                        Eigen::Vector4d camPoint(x, y, z, 1.f);
+                        Eigen::Vector3d worldPoint = m * camPoint;
+
+                        printf("Live Key-Frame Point Cloud Coordinate> X: %.2f, Y: %.2f, Z: %.2f\n",
+                                    worldPoint[0],
+                                    worldPoint[1],
+                                    worldPoint[2]);
+                        
+                        if (isSavePCL && pclFile_realtime.is_open())
+                            {
+                                isWritePCL = true;
+
+                                // pclFile << worldPoint[0] << " " << worldPoint[1] << " " << worldPoint[2] + 2.5 << "\n";  // 沿z轴方向上下平移
+                                // pclFile << worldPoint[0] << " " << worldPoint[1] << " " << worldPoint[2] << "\n"; 
+                                pclFile_realtime << worldPoint[0] << " " << worldPoint[2] << " " << -worldPoint[1] << "\n";  // 手动调整x,y,z轴顺序
+
+                                isWritePCL = false;
+                            }
+                            else
+                            {
+                                if (!isPCLfileClose)
+                                {
+                                    if (pclFile_realtime.is_open())
+                                    {
+                                        pclFile_realtime.flush();
+                                        pclFile_realtime.close();
+                                        isPCLfileClose = true;
+                                    }
+                                }
+                            }
+
+                    }
+
+                    pclFile_realtime.flush();
+                    pclFile_realtime.close();
+                }
+            
+            }
+
+       }
+
         virtual void publishCamPose(FrameShell* frame, CalibHessian* HCalib)
         {
             printf("OUT: Current Frame %d (time %f, internal ID %d). CameraToWorld:\n",

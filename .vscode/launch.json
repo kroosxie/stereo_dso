@@ -10,10 +10,11 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/dso_dataset",
             "args": [
-                "files=/mnt/hgfs/ShareFolder/Beidou_farm",
-                "calib=/mnt/hgfs/ShareFolder/Beidou_farm/camera_zed2i.txt",
+                "files=/mnt/hgfs/ShareFolder/Beidou_farm_part",
+                "calib=/mnt/hgfs/ShareFolder/Beidou_farm_part/camera_zed2i.txt",
                 "preset=0",
-                "mode=1"
+                "mode=1",
+                "sampleoutput=1"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

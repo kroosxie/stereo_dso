@@ -197,6 +197,10 @@ void FullSystem::marginalizeFrame(FrameHessian* frame)
         v.push_back(frame);
         for(IOWrap::Output3DWrapper* ow : outputWrapper)
             ow->publishKeyframes(v, true, &Hcalib);
+
+		// add by xjc 2025.2.17
+		for(IOWrap::Output3DWrapper* ow_live : outputWrapper)
+            ow_live->publishLiveKeyframe(frame, true, &Hcalib);
     }
 
 

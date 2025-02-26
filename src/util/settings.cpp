@@ -213,11 +213,13 @@ int sparsityFactor = 5;	// not actually a setting, only some legacy stuff for co
 
 // Added By xjc.
 int numPCL = 0;
+// int numPCL_Realtime = 0;
 bool isSavePCL = true;
 bool isWritePCL = false;
 bool isPCLfileClose = false;
 std::string strTmpFileName = "pcl_data_tmp.pcd";
 std::string strSaveFileName = "pcl_data.pcd";
+std::string strRealtimeFileName = "pcl_data_realtime.pcd";
 std::string strSaveTmpFileName = "pcl_data_tmp4view.pcd";
 
 void handleKey(char k)

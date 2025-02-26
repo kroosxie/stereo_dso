@@ -147,6 +147,8 @@ public:
          * Always called, negligible overhead if not used.
          */
         virtual void publishKeyframes(std::vector<FrameHessian*> &frames, bool final, CalibHessian* HCalib) {}
+        // add by xjc 2024.10.10 & 2025.2.17
+        virtual void publishLiveKeyframe(FrameHessian* frame, bool final, CalibHessian* HCalib) {}
 
 
 
